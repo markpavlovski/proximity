@@ -12,3 +12,7 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+
+.navbar-fixed {
+  z-index: 9999;
+}
