@@ -27,6 +27,8 @@
   })
   formEl.addEventListener('submit',event=>{
     event.preventDefault()
+    console.log(messageInputEl.value)
+    sendMessage(messageInputEl.value)
     messageInputEl.value=''
     console.log(event);
   })
@@ -91,4 +93,10 @@ function createMessageCard(message){
       </div>
     `
   return messageCard
+}
+
+
+function sendMessage(message){
+  return request(`/messages`, 'post', {message})
+  .then(response => console.log(response))
 }
