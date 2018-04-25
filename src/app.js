@@ -2,8 +2,11 @@
   'use strict';
 
   const distanceEl = document.querySelector('#distance-range')
+  const toggleEl = document.querySelector('#friendsOnlyCheckbox')
   const messageContainer = document.querySelector('main')
+
   console.log(distanceEl.value);
+  console.log(toggleEl.checked);
   console.log(messageContainer);
 
 
@@ -14,12 +17,22 @@
     console.log(distanceEl.value);
     getMessages(distanceEl.value, messageContainer)
   })
+  toggleEl.addEventListener('change',event=>{
+    console.log(toggleEl.checked);
+    if (toggleEl.checked){
+      getMessages(distanceEl.value, messageContainer, true)
+    } else {
+      getMessages(distanceEl.value, messageContainer, false)
+
+    }
+  })
 
 
 })();
 
 
-function getMessages(distance, container, friendsOnly = false){
+function getMessages(distance, container, onlyFriends = false){
+    console.log('!!!!',onlyFriends);
 
     // authe gate
     request('/auth/token')
@@ -28,11 +41,19 @@ function getMessages(distance, container, friendsOnly = false){
     })
     .then(response=>{
       console.log(`user ${response.data.id} is logged in`)
-      return request(`/messages/${distance}`)
+      const query = onlyFriends ? '?onlyFriends=true' : ''
+      console.log(query);
+      console.log(`/messages/${distance}${query}`);
+      return request(`/messages/${distance}${query}`)
     })
-    .then(messages => renderMessages(messages.data.data.rows, container))
+    .then(messages => {
+      const data = onlyFriends ? messages.data.data : messages.data.data.rows
+      renderMessages(data, container)
+    })
     .catch(function(error){
-      console.log('hiiii');
+      console.log('something went wrong');
+      window.location = '/index.html'
+
     })
 }
 
