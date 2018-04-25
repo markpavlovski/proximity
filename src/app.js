@@ -3,11 +3,15 @@
 
   const distanceEl = document.querySelector('#distance-range')
   const toggleEl = document.querySelector('#friendsOnlyCheckbox')
+  const formEl = document.querySelector('form')
+  const messageInputEl = document.querySelector('#message-input')
   const messageContainer = document.querySelector('main')
+
 
   console.log(distanceEl.value);
   console.log(toggleEl.checked);
   console.log(messageContainer);
+  console.log(messageInputEl);
 
 
   getMessages(distanceEl.value, messageContainer)
@@ -20,6 +24,11 @@
   toggleEl.addEventListener('change',event=>{
     console.log(toggleEl.checked);
     getMessages(distanceEl.value, messageContainer, toggleEl.checked)
+  })
+  formEl.addEventListener('submit',event=>{
+    event.preventDefault()
+    messageInputEl.value=''
+    console.log(event);
   })
 
 
