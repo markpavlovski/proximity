@@ -11,6 +11,12 @@
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+  <script defer src="/src/helpers.js"></script>
+  <script defer src="/src/register.js"></script>
+
+
 </head>
 
 <body class='grey lighten-4'>
@@ -21,7 +27,7 @@
 
       <div class="row">
         <form class="col s12">
-          <h6 class='center-align' style='padding: 20px 0px;'>Register New Account</h6>
+          <h6 class='center-align' id='register-new-account' style='padding: 20px 0px;'>Register New Account</h6>
           <div class="row">
 
             <div class="input-field col s12">
@@ -32,7 +38,7 @@
               <input id="password" type="password" class="validate">
               <label for="password">Password</label>
             </div>
-            <div class="row center">
+            <div class="row center" id='button-block'>
               <a id="register-button" class="btn waves-effect waves-light">Register</a>
             </div>
 
