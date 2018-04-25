@@ -13,7 +13,7 @@
   request('/auth/token')
   .then(function(response){
     // user is authenticated
-
+    console.log('asdasd');
   })
   .catch(function(error){
     console.log('hi');
@@ -33,7 +33,7 @@
     request('/auth/token', 'post', { username , password })
     .then(function(response){
       localStorage.setItem('token', response.data.token)
-      window.location = '/register.html'
+      window.location = '/app.html'
     })
     .catch(function(error){
       console.log(error);
