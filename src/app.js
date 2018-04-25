@@ -15,16 +15,11 @@
 
   distanceEl.addEventListener('mouseup',event=>{
     console.log(distanceEl.value);
-    getMessages(distanceEl.value, messageContainer)
+    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
   })
   toggleEl.addEventListener('change',event=>{
     console.log(toggleEl.checked);
-    if (toggleEl.checked){
-      getMessages(distanceEl.value, messageContainer, true)
-    } else {
-      getMessages(distanceEl.value, messageContainer, false)
-
-    }
+    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
   })
 
 
