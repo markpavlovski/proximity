@@ -1,3 +1,5 @@
+const socket = io.connect('http://localhost:3000', {reconnect: true});
+
 (function() {
   'use strict';
 
@@ -32,6 +34,14 @@
     messageInputEl.value=''
     console.log(event);
   })
+
+
+  // var socket = io.connect('http://localhost:3000', {reconnect: true});
+  socket.on('chat message response', function(msg){
+    console.log(msg);
+  });
+
+
 
 
 })();
