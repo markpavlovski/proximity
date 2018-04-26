@@ -1,9 +1,6 @@
-let currentLocation = getCurrentLocation();
 
 (function() {
   'use strict';
-
-
 
   const buttonEl = document.querySelector('#register-button')
   const buttonBlock = document.querySelector('#button-block')

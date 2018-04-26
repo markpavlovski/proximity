@@ -1,6 +1,12 @@
+let currentLocationPromise = getCurrentLocation();
+let fallbackLocation, currentLocation;
+
 (function() {
   'use strict';
 
+  // get location data
+  currentLocationPromise.then(res => currentLocation = `${res.coords.latitude}, ${res.coords.longitude}`)
+  axios.get('https://json.geoiplookup.io/api').then(res=> fallbackLocation = `${res.data.latitude}, ${res.data.longitude}`)
 
   const distanceEl = document.querySelector('#distance-range')
   const toggleEl = document.querySelector('#friendsOnlyCheckbox')
@@ -16,6 +22,9 @@
   console.log(messageInputEl);
 
 
+
+
+
   getMessages(distanceEl.value, messageContainer)
 
 
@@ -28,9 +37,10 @@
     getMessages(distanceEl.value, messageContainer, toggleEl.checked)
   })
   formEl.addEventListener('submit',event=>{
+    const location = currentLocation ? currentLocation : fallbackLocation
     event.preventDefault()
-    console.log(messageInputEl.value)
-    sendMessage(messageInputEl.value)
+    console.log(messageInputEl.value, location)
+    sendMessage(messageInputEl.value, location)
     socket.emit('chat message',`${messageInputEl.value}`)
     messageInputEl.value=''
     console.log(event);
@@ -79,16 +89,11 @@ function getMessages(distance, container, onlyFriends = false){
 
 
 function renderMessages(messages,container){
-  console.log(container);
-  console.log(messages);
   while (container.firstElementChild) container.removeChild(container.firstElementChild)
   messages.map(message=>{
     const messageEl = createMessageCard(message)
     container.appendChild(messageEl)
   })
-  // const footerDiv = document.createElement('div')
-  // footerDiv.setAttribute('style','width:100%; height:120px; background-color:red;')
-  // container.appendChild(footerDiv)
 }
 
 
@@ -113,7 +118,7 @@ function createMessageCard(message){
 }
 
 
-function sendMessage(message){
-  return request(`/messages`, 'post', {message})
+function sendMessage(message, location){
+  return request(`/messages`, 'post', {message, location})
   .then(response => console.log(response))
 }
