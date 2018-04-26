@@ -10,7 +10,10 @@ let fallbackLocation, currentLocation;
     fallbackLocation = `${res.data.latitude}, ${res.data.longitude}`
     return fallbackLocation
   })
-  .then(location => getMessages(distanceEl.value, messageContainer, location))
+  .then(location => {
+    updateCoordinateFeedback()
+    getMessages(distanceEl.value, messageContainer, location)
+  })
 
   const distanceEl = document.querySelector('#distance-range')
   const toggleEl = document.querySelector('#friendsOnlyCheckbox')
@@ -34,16 +37,19 @@ let fallbackLocation, currentLocation;
 
   distanceEl.addEventListener('mouseup',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
+    updateCoordinateFeedback()
     console.log(distanceEl.value);
-    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
+    getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
   })
   toggleEl.addEventListener('change',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
+    updateCoordinateFeedback()
     console.log(toggleEl.checked);
-    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
+    getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
   })
   formEl.addEventListener('submit',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
+    updateCoordinateFeedback()
     event.preventDefault()
     console.log(messageInputEl.value, location)
     sendMessage(messageInputEl.value, location)
@@ -55,6 +61,8 @@ let fallbackLocation, currentLocation;
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
   socket.on('chat message response', function(msg){
+    const location = currentLocation ? currentLocation : fallbackLocation
+    updateCoordinateFeedback()
     getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
     // document.querySelector('#scroll-target').scrollIntoView()
   })
@@ -116,7 +124,7 @@ function createMessageCard(message){
             <h6>${message.username}</h6>
             <p>${message.message}</p>
             <p style='font-size: 8px;'>${message.created_at}</p>
-            <p style='font-size: 6px;'>${message.location}</p>
+            <p style='font-size: 8px;'>${message.location}</p>
           </div>
         </div>
       </div>
@@ -128,4 +136,10 @@ function createMessageCard(message){
 function sendMessage(message, location){
   return request(`/messages`, 'post', {message, location})
   .then(response => console.log(response))
+}
+
+
+function updateCoordinateFeedback(){
+  const location = currentLocation ? currentLocation : fallbackLocation
+  document.querySelector('#coordinate-feedback').innerHTML = location
 }
