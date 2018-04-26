@@ -57,6 +57,9 @@ let fallbackLocation, currentLocation;
     messageInputEl.value=''
     console.log(event);
   })
+  // document.addEventListener('mousedown',event=>{
+  //   if
+  // })
 
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
@@ -121,7 +124,8 @@ function createMessageCard(message){
       <div class="col s10 offset-s1 white z-depth-2 m6 offset-m3 l4 offset-l4" style="padding:0px 40px 0px 40px; border-radius: 4px;">
         <div class="row">
           <div class="input-field col s12">
-            <h6>${message.username}</h6>
+            <h6 style='display: inline-block'>${message.username}</h6>
+            <a class='follow-link' userid='${message.users_id}' style='display: inline-block; cursor: pointer; font-size: 10px; line-height: 20px; margin-left: 6px;'>follow</a>
             <p>${message.message}</p>
             <p style='font-size: 8px;'>${message.created_at}</p>
             <p style='font-size: 8px;'>${message.location}</p>
