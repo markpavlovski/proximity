@@ -38,28 +38,28 @@ let fallbackLocation, currentLocation;
   distanceEl.addEventListener('mouseup',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
     updateCoordinateFeedback()
-    console.log(distanceEl.value);
     getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
   })
   toggleEl.addEventListener('change',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
     updateCoordinateFeedback()
-    console.log(toggleEl.checked);
     getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
   })
   formEl.addEventListener('submit',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
     updateCoordinateFeedback()
     event.preventDefault()
-    console.log(messageInputEl.value, location)
     sendMessage(messageInputEl.value, location)
     socket.emit('chat message',`${messageInputEl.value}`)
     messageInputEl.value=''
-    console.log(event);
   })
-  // document.addEventListener('mousedown',event=>{
-  //   if
-  // })
+  document.addEventListener('mousedown',event=>{
+    if(event.target.classList.contains('follow-link')){
+      const id = event.target.getAttribute('userid')
+      console.log(id);
+      addFriend(id)
+    }
+  })
 
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
@@ -146,4 +146,8 @@ function sendMessage(message, location){
 function updateCoordinateFeedback(){
   const location = currentLocation ? currentLocation : fallbackLocation
   document.querySelector('#coordinate-feedback').innerHTML = location
+}
+
+function addFriend(friendsId){
+  return request(`/users_users`, 'post', {friendsId})
 }
