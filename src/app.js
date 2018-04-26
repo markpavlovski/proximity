@@ -77,8 +77,7 @@ let fallbackLocation, currentLocation;
 
 
 function getMessages(distance, container, location, onlyFriends = false){
-    console.log('!!!!',onlyFriends);
-
+    let activeId
     // authe gate
     request('/auth/token')
     .then(function(response){
@@ -86,13 +85,14 @@ function getMessages(distance, container, location, onlyFriends = false){
     })
     .then(response=>{
       console.log(`user ${response.data.id} is logged in`)
+      activeId = response.data.id
       const query = onlyFriends ? '&onlyFriends=true' : ''
       console.log(query);
       return request(`/messages/${distance}?location=${location}${query}`)
     })
     .then(messages => {
       const data = messages.data.data
-      renderMessages(data, container)
+      renderMessages(data, container, activeId)
       window.scrollTo(0, document.body.scrollHeight)
 
     })
@@ -104,28 +104,33 @@ function getMessages(distance, container, location, onlyFriends = false){
 }
 
 
-function renderMessages(messages,container){
+function renderMessages(messages,container, activeId){
   while (container.firstElementChild) container.removeChild(container.firstElementChild)
   messages.map(message=>{
-    const messageEl = createMessageCard(message)
+    const messageEl = createMessageCard(message,activeId)
     container.appendChild(messageEl)
   })
 }
 
 
 
-function createMessageCard(message){
+function createMessageCard(message,activeId){
+  console.log(activeId);
   const messageCard = document.createElement('div')
   messageCard.classList.add('row')
   messageCard.classList.add('message-card')
   messageCard.setAttribute('style', 'margin-top:40px;')
+  const display = message.users_id == activeId ? 'none' : 'inline-block'
   messageCard.innerHTML =
     `
       <div class="col s10 offset-s1 white z-depth-2 m6 offset-m3 l4 offset-l4" style="padding:0px 40px 0px 40px; border-radius: 4px;">
         <div class="row">
           <div class="input-field col s12">
             <h6 style='display: inline-block'>${message.username}</h6>
-            <a class='follow-link' userid='${message.users_id}' style='display: inline-block; cursor: pointer; font-size: 10px; line-height: 20px; margin-left: 6px;'>follow</a>
+            <a class='follow-link' userid='${message.users_id}'
+            style='display: inline-block; cursor: pointer; font-size: 10px; line-height: 20px; margin-left: 6px; display: ${display}'>
+              follow
+            </a>
             <p>${message.message}</p>
             <p style='font-size: 8px;'>${message.created_at}</p>
             <p style='font-size: 8px;'>${message.location}</p>
