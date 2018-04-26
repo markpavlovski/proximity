@@ -75,7 +75,7 @@ function getMessages(distance, container, onlyFriends = false){
       return request(`/messages/${distance}${query}`)
     })
     .then(messages => {
-      const data = onlyFriends ? messages.data.data : messages.data.data.rows
+      const data = messages.data.data
       renderMessages(data, container)
       window.scrollTo(0, document.body.scrollHeight)
 
@@ -108,8 +108,10 @@ function createMessageCard(message){
       <div class="col s10 offset-s1 white z-depth-2 m6 offset-m3 l4 offset-l4" style="padding:0px 40px 0px 40px; border-radius: 4px;">
         <div class="row">
           <div class="input-field col s12">
-            <h6>${message.users_id}</h6>
+            <h6>${message.username}</h6>
             <p>${message.message}</p>
+            <p style='font-size: 8px;'>${message.created_at}</p>
+            <p style='font-size: 6px;'>${message.location}</p>
           </div>
         </div>
       </div>
