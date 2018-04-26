@@ -1,13 +1,14 @@
-const socket = io.connect('http://localhost:3000', {reconnect: true});
-
 (function() {
   'use strict';
+
 
   const distanceEl = document.querySelector('#distance-range')
   const toggleEl = document.querySelector('#friendsOnlyCheckbox')
   const formEl = document.querySelector('form')
   const messageInputEl = document.querySelector('#message-input')
   const messageContainer = document.querySelector('main')
+
+  const socket = io.connect('http://localhost:3000', {reconnect: true});
 
   console.log(distanceEl.value);
   console.log(toggleEl.checked);
