@@ -57,7 +57,9 @@ let fallbackLocation, currentLocation;
     if(event.target.classList.contains('follow-link')){
       const id = event.target.getAttribute('userid')
       console.log(id);
-      addFriend(id)
+      console.log(event.target.innerText);
+      if (event.target.innerText == 'follow') addFriend(id)
+      if (event.target.innerText == 'unfollow') removeFriend(id)
     }
   })
 
@@ -78,6 +80,7 @@ let fallbackLocation, currentLocation;
 
 function getMessages(distance, container, location, onlyFriends = false){
     let activeId
+    let msg
     // authe gate
     request('/auth/token')
     .then(function(response){
@@ -91,8 +94,12 @@ function getMessages(distance, container, location, onlyFriends = false){
       return request(`/messages/${distance}?location=${location}${query}`)
     })
     .then(messages => {
-      const data = messages.data.data
-      renderMessages(data, container, activeId)
+      msg = messages.data.data
+      return request(`/users_users`)
+    })
+    .then(friends => {
+      console.log(friends.data.data);
+      renderMessages(msg, container, activeId,friends.data.data)
       window.scrollTo(0, document.body.scrollHeight)
 
     })
@@ -104,23 +111,26 @@ function getMessages(distance, container, location, onlyFriends = false){
 }
 
 
-function renderMessages(messages,container, activeId){
+function renderMessages(messages,container, activeId, friends){
   while (container.firstElementChild) container.removeChild(container.firstElementChild)
   messages.map(message=>{
-    const messageEl = createMessageCard(message,activeId)
+    const messageEl = createMessageCard(message,activeId,friends)
     container.appendChild(messageEl)
   })
 }
 
 
 
-function createMessageCard(message,activeId){
+function createMessageCard(message,activeId,friends){
   console.log(activeId);
+  const friendIds = friends.map(friend=>friend.friends_id)
+  console.log('!!!!',friendIds);
   const messageCard = document.createElement('div')
   messageCard.classList.add('row')
   messageCard.classList.add('message-card')
   messageCard.setAttribute('style', 'margin-top:40px;')
   const display = message.users_id == activeId ? 'none' : 'inline-block'
+  const linkText = friendIds.find(friendsId => friendsId == message.users_id) ? 'unfollow' : 'follow'
   messageCard.innerHTML =
     `
       <div class="col s10 offset-s1 white z-depth-2 m6 offset-m3 l4 offset-l4" style="padding:0px 40px 0px 40px; border-radius: 4px;">
@@ -129,7 +139,7 @@ function createMessageCard(message,activeId){
             <h6 style='display: inline-block'>${message.username}</h6>
             <a class='follow-link' userid='${message.users_id}'
             style='display: inline-block; cursor: pointer; font-size: 10px; line-height: 20px; margin-left: 6px; display: ${display}'>
-              follow
+              ${linkText}
             </a>
             <p>${message.message}</p>
             <p style='font-size: 8px;'>${message.created_at}</p>
@@ -155,4 +165,7 @@ function updateCoordinateFeedback(){
 
 function addFriend(friendsId){
   return request(`/users_users`, 'post', {friendsId})
+}
+function removeFriend(friendsId){
+  return request(`/users_users`, 'delete', {friendsId})
 }
