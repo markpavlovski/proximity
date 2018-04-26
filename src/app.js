@@ -6,7 +6,11 @@ let fallbackLocation, currentLocation;
 
   // get location data
   currentLocationPromise.then(res => currentLocation = `${res.coords.latitude}, ${res.coords.longitude}`)
-  axios.get('https://json.geoiplookup.io/api').then(res=> fallbackLocation = `${res.data.latitude}, ${res.data.longitude}`)
+  axios.get('https://json.geoiplookup.io/api').then(res=> {
+    fallbackLocation = `${res.data.latitude}, ${res.data.longitude}`
+    return fallbackLocation
+  })
+  .then(location => getMessages(distanceEl.value, messageContainer, location))
 
   const distanceEl = document.querySelector('#distance-range')
   const toggleEl = document.querySelector('#friendsOnlyCheckbox')
@@ -23,16 +27,18 @@ let fallbackLocation, currentLocation;
 
 
 
-
-
-  getMessages(distanceEl.value, messageContainer)
+  //
+  // const location = currentLocation ? currentLocation : fallbackLocation
+  // getMessages(distanceEl.value, messageContainer, location)
 
 
   distanceEl.addEventListener('mouseup',event=>{
+    const location = currentLocation ? currentLocation : fallbackLocation
     console.log(distanceEl.value);
     getMessages(distanceEl.value, messageContainer, toggleEl.checked)
   })
   toggleEl.addEventListener('change',event=>{
+    const location = currentLocation ? currentLocation : fallbackLocation
     console.log(toggleEl.checked);
     getMessages(distanceEl.value, messageContainer, toggleEl.checked)
   })
@@ -49,7 +55,7 @@ let fallbackLocation, currentLocation;
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
   socket.on('chat message response', function(msg){
-    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
+    getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
     // document.querySelector('#scroll-target').scrollIntoView()
   })
 
@@ -59,7 +65,7 @@ let fallbackLocation, currentLocation;
 })();
 
 
-function getMessages(distance, container, onlyFriends = false){
+function getMessages(distance, container, location, onlyFriends = false){
     console.log('!!!!',onlyFriends);
 
     // authe gate
@@ -69,10 +75,9 @@ function getMessages(distance, container, onlyFriends = false){
     })
     .then(response=>{
       console.log(`user ${response.data.id} is logged in`)
-      const query = onlyFriends ? '?onlyFriends=true' : ''
+      const query = onlyFriends ? '&onlyFriends=true' : ''
       console.log(query);
-      console.log(`/messages/${distance}${query}`);
-      return request(`/messages/${distance}${query}`)
+      return request(`/messages/${distance}?location=${location}${query}`)
     })
     .then(messages => {
       const data = messages.data.data
