@@ -9,7 +9,6 @@ const socket = io.connect('http://localhost:3000', {reconnect: true});
   const messageInputEl = document.querySelector('#message-input')
   const messageContainer = document.querySelector('main')
 
-
   console.log(distanceEl.value);
   console.log(toggleEl.checked);
   console.log(messageContainer);
@@ -31,6 +30,7 @@ const socket = io.connect('http://localhost:3000', {reconnect: true});
     event.preventDefault()
     console.log(messageInputEl.value)
     sendMessage(messageInputEl.value)
+    socket.emit('chat message',`${messageInputEl.value}`)
     messageInputEl.value=''
     console.log(event);
   })
@@ -38,8 +38,9 @@ const socket = io.connect('http://localhost:3000', {reconnect: true});
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
   socket.on('chat message response', function(msg){
-    console.log(msg);
-  });
+    getMessages(distanceEl.value, messageContainer, toggleEl.checked)
+    // document.querySelector('#scroll-target').scrollIntoView()
+  })
 
 
 
@@ -65,6 +66,8 @@ function getMessages(distance, container, onlyFriends = false){
     .then(messages => {
       const data = onlyFriends ? messages.data.data : messages.data.data.rows
       renderMessages(data, container)
+      window.scrollTo(0, document.body.scrollHeight)
+
     })
     .catch(function(error){
       console.log('something went wrong');
@@ -82,6 +85,9 @@ function renderMessages(messages,container){
     const messageEl = createMessageCard(message)
     container.appendChild(messageEl)
   })
+  // const footerDiv = document.createElement('div')
+  // footerDiv.setAttribute('style','width:100%; height:120px; background-color:red;')
+  // container.appendChild(footerDiv)
 }
 
 
