@@ -23,13 +23,6 @@ let fallbackLocation, currentLocation;
 
   const socket = io.connect('https://warm-temple-56216.herokuapp.com', {reconnect: true});
 
-  console.log(distanceEl.value);
-  console.log(toggleEl.checked);
-  console.log(messageContainer);
-  console.log(messageInputEl);
-
-
-
 
 
   distanceEl.addEventListener('change',event=>{
@@ -64,12 +57,10 @@ let fallbackLocation, currentLocation;
 
 
 
-  // var socket = io.connect('http://localhost:3000', {reconnect: true});
   socket.on('chat message response', function(msg){
     const location = currentLocation ? currentLocation : fallbackLocation
     updateCoordinateFeedback()
     getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
-    // document.querySelector('#scroll-target').scrollIntoView()
   })
 
 
@@ -87,10 +78,8 @@ function getMessages(distance, container, location, onlyFriends = false){
       return response
     })
     .then(response=>{
-      console.log(`user ${response.data.id} is logged in`)
       activeId = response.data.id
       const query = onlyFriends ? '&onlyFriends=true' : ''
-      console.log(query);
       return request(`/messages/${distance}?location=${location}${query}`)
     })
     .then(messages => {
@@ -98,7 +87,6 @@ function getMessages(distance, container, location, onlyFriends = false){
       return request(`/users_users`)
     })
     .then(friends => {
-      console.log(friends.data.data);
       renderMessages(msg, container, activeId,friends.data.data)
       window.scrollTo(0, document.body.scrollHeight)
 
@@ -122,9 +110,7 @@ function renderMessages(messages,container, activeId, friends){
 
 
 function createMessageCard(message,activeId,friends){
-  console.log(activeId);
   const friendIds = friends.map(friend=>friend.friends_id)
-  console.log('!!!!',friendIds);
   const messageCard = document.createElement('div')
   messageCard.classList.add('row')
   messageCard.classList.add('message-card')
@@ -154,17 +140,16 @@ function createMessageCard(message,activeId,friends){
 
 function sendMessage(message, location){
   return request(`/messages`, 'post', {message, location})
-  .then(response => console.log(response))
 }
 
 
 function updateCoordinateFeedback(){
-  const location = currentLocation ? currentLocation : fallbackLocation
+  let location = currentLocation ? currentLocation : fallbackLocation
+  location = location.split(', ').map(el=>el.substring(0,7)).join(', ')
   document.querySelector('#coordinate-feedback').innerHTML = location
 }
 
 function addFriend(friendsId){
-  console.log('hi');
   return request(`/users_users`, 'post', {friendsId})
   .then(()=>{
     const friendElements = document.querySelectorAll('.follow-link')

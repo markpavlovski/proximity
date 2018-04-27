@@ -4,10 +4,11 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
-  <title>proximity</title>
+  <title>proximity - like Yik Yak but worse</title>
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 
@@ -28,7 +29,7 @@
     <nav class="teal darken-2">
       <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo" style='font-size:16px;'>proximity</a>
         <ul class="right hide-on-med-and-down">
-          <li><a href="#" class='logout'>Logout</a></li>
+          <li><a href="#" class='logout' style='font-size: 12px;'>Logout</a></li>
         </ul>
 
         <ul id="nav-mobile" class="sidenav">
@@ -45,7 +46,10 @@
     <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4" style="padding:0px 40px 0px 40px; border-radius: 4px;">
       <div class="row">
         <div class="input-field col s12">
-          <p class="center-align" id='coordinate-feedback' style='font-size: 12px;'></p>
+          <div style='margin:auto; width:150px;'>
+            <i class="fas fa-map-marker teal-text text-darken-3" style='display:inline-block; margin-right: 20px;'></i>
+            <p id='coordinate-feedback' style='font-size: 12px; display:inline-block'></p>
+          </div>
         </div>
         <div class="input-field col s12">
           <p class="range-field">
@@ -56,7 +60,7 @@
           <div class="switch">
             <label>
              <input type="checkbox" id='friendsOnlyCheckbox'>
-             <span class="lever"></span>Show friend's messages only
+             <span class="lever"></span>friends only
            </label>
           </div>
         </div>
