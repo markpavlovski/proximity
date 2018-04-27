@@ -45,6 +45,12 @@
         })
         .catch(function(error) {
           console.log(error);
+          logoText.innerHTML = 'Incorrect Credentials'
+          logoText.setAttribute('style','padding: 0px 0px; margin:60px 0px; color:red !important;')
+          setTimeout(()=>{
+            logoText.innerHTML = 'proximity'
+            logoText.setAttribute('style','padding: 0px 0px; margin:60px 0px;')
+          }, 1500)
         })
     }
 
