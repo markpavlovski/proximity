@@ -30,12 +30,9 @@ let fallbackLocation, currentLocation;
 
 
 
-  //
-  // const location = currentLocation ? currentLocation : fallbackLocation
-  // getMessages(distanceEl.value, messageContainer, location)
 
 
-  distanceEl.addEventListener('mouseup',event=>{
+  distanceEl.addEventListener('change',event=>{
     const location = currentLocation ? currentLocation : fallbackLocation
     updateCoordinateFeedback()
     getMessages(distanceEl.value, messageContainer, location, toggleEl.checked)
@@ -56,12 +53,15 @@ let fallbackLocation, currentLocation;
   document.addEventListener('mousedown',event=>{
     if(event.target.classList.contains('follow-link')){
       const id = event.target.getAttribute('userid')
-      console.log(id);
-      console.log(event.target.innerText);
       if (event.target.innerText == 'follow') addFriend(id)
       if (event.target.innerText == 'unfollow') removeFriend(id)
     }
+    if(event.target.classList.contains('logout')){
+      window.localStorage.clear()
+      window.location = '/index.html'
+    }
   })
+
 
 
   // var socket = io.connect('http://localhost:3000', {reconnect: true});
@@ -137,7 +137,7 @@ function createMessageCard(message,activeId,friends){
         <div class="row">
           <div class="input-field col s12">
             <h6 style='display: inline-block'>${message.username}</h6>
-            <a class='follow-link' userid='${message.users_id}'
+            <a class='follow-link ${linkText == 'unfollow' ? 'unfollow' : ''}' userid='${message.users_id}'
             style='display: inline-block; cursor: pointer; font-size: 10px; line-height: 20px; margin-left: 6px; display: ${display}'>
               ${linkText}
             </a>
@@ -164,8 +164,29 @@ function updateCoordinateFeedback(){
 }
 
 function addFriend(friendsId){
+  console.log('hi');
   return request(`/users_users`, 'post', {friendsId})
+  .then(()=>{
+    const friendElements = document.querySelectorAll('.follow-link')
+    for (let i=0; i< friendElements.length; i++){
+      const friendEl = friendElements[i]
+      if (friendEl.getAttribute('userid') == friendsId){
+        friendEl.innerText = 'unfollow'
+        friendEl.classList.add('unfollow')
+      }
+    }
+  })
 }
 function removeFriend(friendsId){
   return request(`/users_users`, 'delete', {friendsId})
+  .then(()=>{
+    const friendElements = document.querySelectorAll('.follow-link')
+    for (let i=0; i< friendElements.length; i++){
+      const friendEl = friendElements[i]
+      if (friendEl.getAttribute('userid') == friendsId){
+        friendEl.innerText = 'follow'
+        friendEl.classList.remove('unfollow')
+      }
+    }
+  })
 }

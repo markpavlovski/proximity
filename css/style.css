@@ -17,3 +17,8 @@
 .navbar-fixed {
   z-index: 9999;
 }
+
+.unfollow {
+  color: #f44336 !important;
+  transition: color .2s ease;
+}

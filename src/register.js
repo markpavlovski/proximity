@@ -72,7 +72,7 @@
         buttonEl.innerHTML = `User <b>${username}</b> created! Redirecting..`
         console.log('user created', response);
         document.querySelector('#register-new-account').focus()
-        setTimeout(()=>window.location = '/index.html', 2000)
+        setTimeout(()=>window.location = '/index.html', 1000)
       })
       .catch(function(error){
         buttonEl.setAttribute('style','background-color: white; color: #f44336; box-shadow: none; cursor: auto; font-size: 10px')
