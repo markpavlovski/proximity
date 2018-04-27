@@ -21,7 +21,7 @@ let fallbackLocation, currentLocation;
   const messageInputEl = document.querySelector('#message-input')
   const messageContainer = document.querySelector('main')
 
-  const socket = io.connect('http://localhost:3000', {reconnect: true});
+  const socket = io.connect('https://warm-temple-56216.herokuapp.com', {reconnect: true});
 
   console.log(distanceEl.value);
   console.log(toggleEl.checked);
