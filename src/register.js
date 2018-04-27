@@ -20,20 +20,16 @@
   // login form
   buttonEl.addEventListener('mousedown', function(event){
     event.preventDefault()
-    console.log('sd');
 
     const username = usernameEl.value
     const password = passwordEl.value
 
     clear(usernameEl, passwordEl)
 
-    console.log(username,password);
-
     request('/users', 'post', { username , password })
     .then(function(response){
       buttonEl.setAttribute('style','background-color: white; color: #388e3c; box-shadow: none; cursor: auto; font-size: 10px')
       buttonEl.innerHTML = `User ${username} created! Redirecting..`
-      console.log('user created', response);
       setTimeout(()=>window.location = '/index.html', 2000)
     })
     .catch(function(error){
@@ -48,7 +44,6 @@
   })
 
   passwordEl.addEventListener('keydown',(event)=>{
-    // console.log(event.key);
     if (event.key==='Tab') {
       event.preventDefault()
     }
@@ -56,21 +51,17 @@
 
     if (event.key==='Enter') {
       event.preventDefault()
-      console.log('sd');
 
       const username = usernameEl.value
       const password = passwordEl.value
 
       clear(usernameEl, passwordEl)
 
-      console.log(username,password);
-
       request('/users', 'post', { username , password })
       .then(function(response){
 
         buttonEl.setAttribute('style','background-color: white; color: #388e3c; box-shadow: none; cursor: auto; font-size: 10px')
         buttonEl.innerHTML = `User <b>${username}</b> created! Redirecting..`
-        console.log('user created', response);
         document.querySelector('#register-new-account').focus()
         setTimeout(()=>window.location = '/index.html', 1000)
       })

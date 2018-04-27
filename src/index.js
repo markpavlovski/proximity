@@ -6,16 +6,15 @@
   const buttonBlock = document.querySelector('#button-block')
   const usernameEl = document.querySelector('#username')
   const passwordEl = document.querySelector('#password')
+  const logoText = document.querySelector('#logo-text')
 
 
 
   request('/auth/token')
     .then(function(response) {
       // user is authenticated
-      console.log('asdasd');
     })
     .catch(function(error) {
-      console.log('hi');
       // user is not authenticated
     })
 
@@ -56,7 +55,6 @@
   // login form
   document.querySelector('#login-button').addEventListener('click', function(event) {
     event.preventDefault()
-    console.log('hello');
 
     const username = usernameEl.value
     const password = passwordEl.value
@@ -71,6 +69,12 @@
       })
       .catch(function(error) {
         console.log(error);
+        logoText.innerHTML = 'Incorrect Credentials'
+        logoText.setAttribute('style','padding: 0px 0px; margin:60px 0px; color:red !important;')
+        setTimeout(()=>{
+          logoText.innerHTML = 'proximity'
+          logoText.setAttribute('style','padding: 0px 0px; margin:60px 0px;')
+        }, 2000)
       })
   })
 })();
